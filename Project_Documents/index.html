@@ -30,17 +30,15 @@
         <div class="col-md-3">
           <aside class="filters">
             <div class="panel panel-default">
-              <div class="panel-heading">Filter Search</div>
+              <div class="panel-heading">Select Death Type</div>
               <div class="panel-body">
-                  <div class="form-group">
-                    <ul class="list-group" id="filters">
-                      <li class="filter list-group-item">
-                        <label for="date">Enter a Death Type</label>
-                        <input class="form-control" id="datetime" type="text" placeholder="Unsafe Water Source">
-                      </li>
-                    </ul>
-                  </div>
-                  <button id="filter-btn" type="button" class="btn btn-default">Filter Graphics</button>
+                <select id="selDataset">
+                  <label for="date">Select a Death Type</label>
+                  <option value="dataset1">Unsafe Water Source</option>
+                  <option value="dataset2">Poor Sanitation</option>
+                  <option value="dataset2">No Access to Handwashing Facility</option>
+                </select>
+                <button id="filter-btn" type="button" class="btn btn-default">Filter Graphics</button>
               </div>
             </div>
           </aside>
@@ -50,6 +48,8 @@
             <div id="map1">
             </div>
             <div id="map2">
+            </div>
+            <div id="graph1">
             </div>
           </div>
         </div>

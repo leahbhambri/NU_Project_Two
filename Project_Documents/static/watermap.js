@@ -24,7 +24,7 @@ var myMap2 = L.map("map2", {
           }
       })
       console.log(geoJson);
-  
+
       // Create a new choropleth layer.
       geojson = L.choropleth(values, {
   

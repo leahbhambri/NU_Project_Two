@@ -43,19 +43,6 @@ body {
   margin: 0;
 }
 
-/* This CSS styles the ufo icon in the navbar */
-.nav-ufo {
-  position: absolute;
-  bottom: 15px;
-  left: 225px;
-  width: 35px;
-  color: white;
-}
-
-/* Adding styles to the aside and filter form */
-.ufo-form {
-  margin-top: 50px;
-}
 
 .filters .panel-body {
   padding: 0;
@@ -73,15 +60,16 @@ select {
   outline: none;
 }
 
-#table-area th {
-  text-align: center;
+
+#map1,
+#map2, 
+#graph1 {
+  width: 100%;
+  height: 500px;
+  padding: 0;
+  margin: 20px 0 20px 0;
 }
 
-#table-area th:first-child,
-#table-area th:nth-child(2),
-#table-area th:nth-child(6) {
-  min-width: 70px;
-}
 
 .loader {
   margin-top: 50px;
@@ -152,7 +140,7 @@ select {
   .hero h1 {
     animation: smaller-title 1.2s forwards linear;
   }
-}
+
 
 /* keyframe animations which will be used to animate the title */
 @keyframes title {

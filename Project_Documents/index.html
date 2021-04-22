@@ -27,9 +27,6 @@
     integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
     crossorigin=""/>
 
-    <!-- leaflet-choropleth JavaScript -->
-    <script type="text/javascript" src="static/choropleth.js"></script>
-
     <!-- Our CSS -->
     <link rel="stylesheet" type="text/css" href="static/style.css">
 
@@ -61,6 +58,15 @@
                   </div>
                 </div>
               </aside>
+              <div>
+                <hr>
+                <h1>
+                  Nearly 1.2 million deaths are attributed to unsafe water sources each year
+                </h1>
+                <p>
+                  
+                </p>
+              </div>
             </div>
             <div class="col-md-9">
               <div class = "container">
@@ -97,10 +103,13 @@
     crossorigin=""></script>
 
     <!-- Our JavaScript code-->
+    <!-- leaflet-choropleth JavaScript -->
+    <script type="text/javascript" src="static/choropleth.js"></script>
     <script src="static/watermap.js"></script>
     <script src="static/codmap.js"></script>
     <script src="static/graph.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
     <script src="static/app.js"></script>
+    <!-- <script type = "text/javascript" src="{{url_for('static', filename='logic')}}"></script> -->
 </body>
 </html>

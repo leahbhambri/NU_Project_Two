@@ -1,7 +1,7 @@
 // id="selDataset" in the index.html
 var selection = d3.select("#selDataset")
 
-var causeDeath = ["Unsafe Water Source", "Poor Sanitation", "No Access to Handwashing Facility"];
+var causeDeath = ["UsafeWater", "Sanitation", "Handwash"];
 
   causeDeath.forEach((death) => {
     selection
@@ -15,20 +15,14 @@ var causeDeath = ["Unsafe Water Source", "Poor Sanitation", "No Access to Handwa
   optionChanged(causeDeath[0]);
   
   
-  // Creating the map object
-  var myMap = L.map("map1", {
-    center: [32.7502, 45.7655],
-    zoom: 2
-  });
-  
   // Adding the tile layer
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  var topo = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(myMap);
+  })
 
 var promises = [d3.json('Resources/countries.geojson'), d3.csv('Resources/merge_df.csv')]
 var test = true;
-function optionChanged(causeDeath) {
+function optionChanged(deathCause) {
   Promise.all(promises).then(values => {
     var geoJson = values[0];
     var csv = values[1];
@@ -42,19 +36,19 @@ function optionChanged(causeDeath) {
         }
     })
     console.log(geoJson);
-
-    var water_source = {"country_code": values.features.properties.code, "death_perc": values.features.properties.unsafe_water_perct};
-    var sanitation = {"country_code": values.features.properties.code, "death_perc": values.features.properties.unsafe_sanitation_perct};
-    var handwash = {"country_code": values.features.properties.code, "death_perc": values.features.properties.no_handwashing_perct};
+  
+    // var water_source = {"country_code": geoJson.features.properties.code, "death_perc": geoJson.features.properties.unsafe_water_perct};
+    // var sanitation = {"country_code": geoJson.features.properties.code, "death_perc": geoJson.features.properties.unsafe_sanitation_perct};
+    // var handwash = {"country_code": geoJson.features.properties.code, "death_perc": geoJson.features.properties.no_handwashing_perct};
 
     // Create a new choropleth layer.
-    geojson = L.choropleth(values, {
+    UnsafeWater = L.choropleth(geoJson, {
 
     // Define which property in the features to use. Needs to be variable based on dropdown selection
-    valueProperty: "safe_water_2017",
+    valueProperty: "unsafe_water_perct",
 
     // Set the color scale.
-    scale: ["#ffffb2", "#b10026"],
+    scale: ["#E0FFFF", "#00008B"],
 
     // The number of breaks in the step range
     steps: 10,
@@ -73,7 +67,90 @@ function optionChanged(causeDeath) {
       layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
         "$" + feature.properties.safe_water_2017);
     }
-  }).addTo(myMap);
+  })
+
+    // Create a new choropleth layer.
+    Sanitation = L.choropleth(geoJson, {
+
+      // Define which property in the features to use. Needs to be variable based on dropdown selection
+      valueProperty: "unsafe_sanitation_perct",
+  
+      // Set the color scale.
+      scale: ["#E0FFFF", "#00008B"],
+  
+      // The number of breaks in the step range
+      steps: 10,
+  
+      // q for quartile, e for equidistant, k for k-means
+      mode: "q",
+      style: {
+        // Border color
+        color: "#fff",
+        weight: 1,
+        fillOpacity: 0.8
+      },
+  
+      // Binding a popup to each layer - needs to be variable based on dropdown selection
+      onEachFeature: function(feature, layer) {
+        layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
+          "$" + feature.properties.safe_water_2017);
+      }
+    })
+
+    // Create a new choropleth layer.
+    Handwash = L.choropleth(geoJson, {
+
+      // Define which property in the features to use. Needs to be variable based on dropdown selection
+      valueProperty: "no_handwashing_perct",
+  
+      // Set the color scale.
+      scale: ["#E0FFFF", "#00008B"],
+  
+      // The number of breaks in the step range
+      steps: 10,
+  
+      // q for quartile, e for equidistant, k for k-means
+      mode: "q",
+      style: {
+        // Border color
+        color: "#fff",
+        weight: 1,
+        fillOpacity: 0.8
+      },
+  
+      // Binding a popup to each layer - needs to be variable based on dropdown selection
+      onEachFeature: function(feature, layer) {
+        layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
+          "$" + feature.properties.safe_water_2017);
+      }
+    })
+  
+
+    // Only one base layer can be shown at a time.
+    var baseMaps = {
+      Topography: topo
+    };
+
+    // Overlays that can be toggled on or off
+    var overlayMaps = {
+      "Unsafe Water": UnsafeWater,
+      "Sanitation" : Sanitation,
+      "No Handwashing" : Handwash
+    };
+
+
+    // Create a map object, and set the default layers.
+    var myMap = L.map("map1", {
+      center: [32.7502, 45.7655],
+      zoom: 2,
+      layers: [topo, Handwash]
+    });
+  
+
+    // Pass our map layers into our layer control.
+    // Add the layer control to the map.
+    L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+
 
   // Set up the legend.
   var legend = L.control({ position: "bottomright" });

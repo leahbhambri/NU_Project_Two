@@ -212,7 +212,7 @@ function init() {
         var labels = [];
 
         // Add the minimum and maximum.
-        var legendInfo = "<h1>Median Income</h1>" +
+        var legendInfo = "<h1>Access to Safe Water %</h1>" +
           "<div class=\"labels\">" +
           "<div class=\"min\">" + limits[0] + "</div>" +
           "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
@@ -230,7 +230,6 @@ function init() {
 
       // Adding the legend to the map
       legend.addTo(myMap2);
-
 
 
     })

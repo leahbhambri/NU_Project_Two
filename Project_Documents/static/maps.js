@@ -1,7 +1,9 @@
 // id="selDataset" in the index.html
 var selection = d3.select("#selDataset")
+var myMap = null;
+var layerLookup = {};
 
-var causeDeath = ["UsafeWater", "Sanitation", "Handwash"];
+var causeDeath = ["UnsafeWater", "Sanitation", "Handwash"];
 
   causeDeath.forEach((death) => {
     selection
@@ -10,9 +12,6 @@ var causeDeath = ["UsafeWater", "Sanitation", "Handwash"];
       .text(death)
       .classed("option-list-item",true);
   });
-
-  // Initialize the dashboard to start at Unsafe Water Source
-  optionChanged(causeDeath[0]);
   
   
   // Adding the tile layer
@@ -22,7 +21,20 @@ var causeDeath = ["UsafeWater", "Sanitation", "Handwash"];
 
 var promises = [d3.json('Resources/countries.geojson'), d3.csv('Resources/merge_df.csv')]
 var test = true;
+var activeLayer = null;
+
+// Initialize the dashboard to start at Unsafe Water Source
+
 function optionChanged(deathCause) {
+    if(activeLayer) {
+      myMap.removeLayer(activeLayer);
+    }
+    activeLayer = layerLookup[deathCause];
+    myMap.addLayer(activeLayer);
+}
+
+function init() {
+
   Promise.all(promises).then(values => {
     var geoJson = values[0];
     var csv = values[1];
@@ -35,11 +47,6 @@ function optionChanged(deathCause) {
             })
         }
     })
-    console.log(geoJson);
-  
-    // var water_source = {"country_code": geoJson.features.properties.code, "death_perc": geoJson.features.properties.unsafe_water_perct};
-    // var sanitation = {"country_code": geoJson.features.properties.code, "death_perc": geoJson.features.properties.unsafe_sanitation_perct};
-    // var handwash = {"country_code": geoJson.features.properties.code, "death_perc": geoJson.features.properties.no_handwashing_perct};
 
     // Create a new choropleth layer.
     UnsafeWater = L.choropleth(geoJson, {
@@ -65,7 +72,7 @@ function optionChanged(deathCause) {
     // Binding a popup to each layer - needs to be variable based on dropdown selection
     onEachFeature: function(feature, layer) {
       layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
-        "$" + feature.properties.safe_water_2017);
+      Math.round(feature.properties.unsafe_water_perct*100)/100 + "%");
     }
   })
 
@@ -93,7 +100,7 @@ function optionChanged(deathCause) {
       // Binding a popup to each layer - needs to be variable based on dropdown selection
       onEachFeature: function(feature, layer) {
         layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
-          "$" + feature.properties.safe_water_2017);
+         Math.round(feature.properties.unsafe_sanitation_perct*100)/100) + "%";
       }
     })
 
@@ -121,10 +128,16 @@ function optionChanged(deathCause) {
       // Binding a popup to each layer - needs to be variable based on dropdown selection
       onEachFeature: function(feature, layer) {
         layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
-          "$" + feature.properties.safe_water_2017);
+        Math.round(feature.properties.no_handwashing_perct*100)/100 + "%");
       }
     })
   
+    // These JSON keys map directly to the OPTION values in the SELECT dropdown
+    layerLookup = {
+      "Sanitation": Sanitation,
+      "UnsafeWater": UnsafeWater,
+      "Handwash": Handwash
+    };
 
     // Only one base layer can be shown at a time.
     var baseMaps = {
@@ -140,10 +153,10 @@ function optionChanged(deathCause) {
 
 
     // Create a map object, and set the default layers.
-    var myMap = L.map("map1", {
+    myMap = L.map("map1", {
       center: [32.7502, 45.7655],
       zoom: 2,
-      layers: [topo, Handwash]
+      layers: [topo, UnsafeWater]
     });
   
 
@@ -151,37 +164,108 @@ function optionChanged(deathCause) {
     // Add the layer control to the map.
     L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 
-
-  // Set up the legend.
-  var legend = L.control({ position: "bottomright" });
-  legend.onAdd = function() {
-    var div = L.DomUtil.create("div", "info legend");
-    var limits = geojson.options.limits;
-    var colors = geojson.options.colors;
-    var labels = [];
-
-    // Add the minimum and maximum.
-    var legendInfo = "<h1>Median Income</h1>" +
-      "<div class=\"labels\">" +
-        "<div class=\"min\">" + limits[0] + "</div>" +
-        "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-      "</div>";
-
-    div.innerHTML = legendInfo;
-
-    limits.forEach(function(limit, index) {
-      labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+        // Creating the map object
+    var myMap2 = L.map("map2", {
+      center: [32.7502, 45.7655],
+      zoom: 2
     });
 
-    div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-    return div;
-  };
+    // Adding the tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(myMap2);
 
-  // Adding the legend to the map
-  legend.addTo(myMap);
+      // Create a new choropleth layer.
+      geojson = L.choropleth(geoJson, {
+
+        // Define which property in the features to use.
+        valueProperty: "safe_water_2017",
+
+        // Set the color scale.
+        scale: ["#E0FFFF", "#00008B"],
+
+        // The number of breaks in the step range
+        steps: 10,
+
+        // q for quartile, e for equidistant, k for k-means
+        mode: "q",
+        style: {
+          // Border color
+          color: "#fff",
+          weight: 1,
+          fillOpacity: 0.8
+        },
+
+        // Binding a popup to each layer
+        onEachFeature: function (feature, layer) {
+          layer.bindPopup("Country: " + feature.properties.country_name + "<br>Access to Clean Water:<br>" +
+            Math.round(feature.properties.safe_water_2017*100)/100 + "%");
+        }
+      }).addTo(myMap2);
+
+      // Set up the legend.
+      var legend = L.control({ position: "bottomright" });
+      legend.onAdd = function () {
+        var div = L.DomUtil.create("div", "info legend");
+        var limits = geojson.options.limits;
+        var colors = geojson.options.colors;
+        var labels = [];
+
+        // Add the minimum and maximum.
+        var legendInfo = "<h1>Median Income</h1>" +
+          "<div class=\"labels\">" +
+          "<div class=\"min\">" + limits[0] + "</div>" +
+          "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+          "</div>";
+
+        div.innerHTML = legendInfo;
+
+        limits.forEach(function (limit, index) {
+          labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+        });
+
+        div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+        return div;
+      };
+
+      // Adding the legend to the map
+      legend.addTo(myMap2);
 
 
 
-})}
+    })
 
+    // Set up the legend.
+    var legend = L.control({ position: "bottomright" });
+    legend.onAdd = function() {
+      var div = L.DomUtil.create("div", "info legend");
+      var limits = geoJson.options.limits;
+      var colors = geoJson.options.colors;
+      var labels = [];
+
+      // Add the minimum and maximum.
+      var legendInfo = "<h1>Cause of Death %</h1>" +
+        "<div class=\"labels\">" +
+          "<div class=\"min\">" + limits[0] + "</div>" +
+          "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+        "</div>";
+
+      div.innerHTML = legendInfo;
+
+      limits.forEach(function(limit, index) {
+        labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+      });
+
+      div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+      return div;
+    };
+
+    // Adding the legend to the map
+    legend.addTo(myMap);
+
+}
+
+init();
+
+optionChanged(causeDeath[0]);
 

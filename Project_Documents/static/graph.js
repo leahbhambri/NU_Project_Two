@@ -27,7 +27,7 @@ function makeResponsive(yaxis) {
     d3.select("#chartdiv").append("div").attr("class", "tooltip").style("opacity", 0);
 
     // Read in code
-    d3.csv("Resources/merge_df.csv").then(function (waterData) {
+    d3.csv("Resources/merge_df.csv").then(function(waterData) {
         // console.log(waterData);
         waterData.forEach(function (d) {
             d[yaxis] = +d[yaxis];

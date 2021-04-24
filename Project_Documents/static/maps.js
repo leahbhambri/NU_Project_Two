@@ -204,63 +204,55 @@ function init() {
       }).addTo(myMap2);
 
       // Set up the legend.
-      var legend = L.control({ position: "bottomright" });
-      legend.onAdd = function () {
+      var legend2 = L.control({
+        position: "bottomright"
+    });
+  
+    legend2.onAdd = function (map) {
         var div = L.DomUtil.create("div", "info legend");
-        var limits = geojson.options.limits;
-        var colors = geojson.options.colors;
-        var labels = [];
-
-        // Add the minimum and maximum.
-        var legendInfo = "<h1>Access to Safe Water %</h1>" +
-          "<div class=\"labels\">" +
-          "<div class=\"min\">" + limits[0] + "</div>" +
-          "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-          "</div>";
-
-        div.innerHTML = legendInfo;
-
-        limits.forEach(function (limit, index) {
-          labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-        });
-
-        div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+  
+        var grades2 = geojson.options.limits;
+        var colors2 = geojson.options.colors;
+  
+        // Looping through our intervals to generate a label with a colored square for each interval.
+        for (var i = 0; i < grades2.length; i++) {
+            div.innerHTML += "<i style='background: " + colors2[i] + "'></i> "
+                + grades2[i] + (grades2[i + 1] ? "&ndash;" + grades2[i + 1] + "<br>" : "+");
+        }
         return div;
       };
 
       // Adding the legend to the map
-      legend.addTo(myMap2);
+      legend2.addTo(myMap2);
+      legend.addTo(myMap);
+
 
 
     })
 
-    // Set up the legend.
-    var legend = L.control({ position: "bottomright" });
-    legend.onAdd = function() {
+
+    // worked on legend with tutor
+    var legend = L.control({
+      position: "bottomright"
+  });
+
+  legend.onAdd = function (map) {
       var div = L.DomUtil.create("div", "info legend");
-      var limits = geoJson.options.limits;
-      var colors = geoJson.options.colors;
-      var labels = [];
 
-      // Add the minimum and maximum.
-      var legendInfo = "<h1>Cause of Death %</h1>" +
-        "<div class=\"labels\">" +
-          "<div class=\"min\">" + limits[0] + "</div>" +
-          "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-        "</div>";
+      var grades = geojson.options.limits;
+      var colors = geojson.options.colors;
 
-      div.innerHTML = legendInfo;
-
-      limits.forEach(function(limit, index) {
-        labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-      });
-
-      div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+      // Looping through our intervals to generate a label with a colored square for each interval.
+      for (var i = 0; i < grades.length; i++) {
+          div.innerHTML += "<i style='background: " + colors[i] + "'></i> "
+              + grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+      }
       return div;
-    };
+  };
 
-    // Adding the legend to the map
-    legend.addTo(myMap);
+  // Finally, we our legend to the map.
+  legend.addTo(myMap);
+
 
 }
 

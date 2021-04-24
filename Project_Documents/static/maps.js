@@ -239,8 +239,8 @@ function init() {
   legend.onAdd = function (map) {
       var div = L.DomUtil.create("div", "info legend");
 
-      var grades = geojson.options.limits;
-      var colors = geojson.options.colors;
+      var grades = UnsafeWater.options.limits;
+      var colors = UnsafeWater.options.colors;
 
       // Looping through our intervals to generate a label with a colored square for each interval.
       for (var i = 0; i < grades.length; i++) {

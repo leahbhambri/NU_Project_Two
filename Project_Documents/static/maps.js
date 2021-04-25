@@ -48,7 +48,7 @@ function init() {
         }
     })
 
-    // Create a new choropleth layer.
+    // Create a new choropleth layer for Unsafe Water data
     UnsafeWater = L.choropleth(geoJson, {
 
     // Define which property in the features to use. Needs to be variable based on dropdown selection

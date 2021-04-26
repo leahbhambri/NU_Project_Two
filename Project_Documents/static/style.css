@@ -261,7 +261,7 @@ select {
   margin: 0;
 }
 
-.d3-tip {
+/* .d3-tip {
   padding: 6px;
   font-size: 12px;
   line-height: 1;
@@ -271,7 +271,22 @@ select {
   text-transform: capitalize;
   background: rgba(0, 0, 0, 0.8);
   border-radius: 4px;
+} */
+
+.tooltip {
+  display: none;
+  position: absolute;
+  width: 80px;
+  height: 30px;
+  padding: 2px;
+  font: 12px sans-serif;
+  text-align: center;
+  background: orange;
+  border: 0;
+  border-radius: 10px;
 }
+
+
 
 /* Mobile Rules */
 @media screen and (max-width: 530px) {

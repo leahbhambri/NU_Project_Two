@@ -27,7 +27,7 @@ function makeResponsive() {
 
     // Create an SVG Element/Wrapper - Select Body, Append SVG Area & Set the Dimensions
     var svg = d3
-        .select("#chartdiv")
+        .select("#scatter")
         .append("svg")
         .attr("width", svgWidth)
         .attr("height", svgHeight);
@@ -103,40 +103,56 @@ function makeResponsive() {
     }
 
     // Function for Updating Circles Group with New Tooltip
-    function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
+    function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup, acsData) {
 
         if (chosenXAxis === "safe_water_2017") {
             var xLabelsGroup = "% of Population with Access to Clean Water";
-        
+
         }
 
         // Initialize Tool Tip
-        var toolTip = d3.tip()
-            .attr("class", "tooltip d3-tip")
-            .offset([90, 90])
-            .html(function (d) {
-                return (`<strong>${d.code}</strong><br>${xLabelsGroup} ${d[chosenXAxis]}<br>${yLabelsGroup} ${d[chosenYAxis]}`);
-            });
+        var toolTip = d3.select("#tooltip")
+            .attr("class", "tooltip")
+        circlesGroup.on("mouseover", function (d, i) {
+            toolTip.style("display", "block");
+            toolTip.html(`Pizzas eaten: <strong>${d}</strong>`)
+                .style("left", d3.event.pageX + "px")
+                .style("top", d3.event.pageY + "px");
+            
+        })
+        .on("mouseout", function() {
+            toolTip.style("display", "none");
+          });
+
+
+
+        // var toolTip = d3.tip()
+        //     .attr("class", "tooltip d3-tip")
+        //     .offset([90, 90])
+        //     .html(function (d) {
+        //         return (`<strong>${d.code}</strong><br>${xLabelsGroup} ${d[chosenXAxis]}<br>${yLabelsGroup} ${d[chosenYAxis]}`);
+        //     });
+
         // Create Circles Tooltip in the Chart
-        circlesGroup.call(toolTip);
+        // circlesGroup.call(toolTip);
         // Create Event Listeners to Display and Hide the Circles Tooltip
-        circlesGroup.on("mouseover", function (d) {
-            toolTip.show(d, this);
-        })
-            // onmouseout Event
-            .on("mouseout", function (d) {
-                toolTip.hide(d);
-            });
-        // Create Text Tooltip in the Chart
-        textGroup.call(toolTip);
+        // circlesGroup.on("mouseover", function (d) {
+        //     toolTip.show(d, this);
+        // })
+        //     // onmouseout Event
+        //     .on("mouseout", function (d) {
+        //         toolTip.hide(d);
+        //     });
+        // // Create Text Tooltip in the Chart
+        // textGroup.call(toolTip);
         // Create Event Listeners to Display and Hide the Text Tooltip
-        textGroup.on("mouseover", function (d) {
-            toolTip.show(d, this);
-        })
-            // onmouseout Event
-            .on("mouseout", function (d) {
-                toolTip.hide(d);
-            });
+        // textGroup.on("mouseover", function (d) {
+        //     toolTip.show(d, this);
+        // })
+        //     // onmouseout Event
+        //     .on("mouseout", function (d) {
+        //         toolTip.hide(d);
+        //     });
         return circlesGroup;
     }
 
@@ -190,7 +206,7 @@ function makeResponsive() {
                 .enter()
                 .append("text")
                 .attr("x", d => xLinearScale(d[chosenXAxis]))
-                .attr("y", d => yLinearScale(d[chosenYAxis])+10/2.5)
+                .attr("y", d => yLinearScale(d[chosenYAxis]) + 10 / 2.5)
                 .text(d => (d.code))
                 .attr("class", "stateText")
                 .attr("font-size", "8px")
@@ -244,7 +260,7 @@ function makeResponsive() {
                 .text("Death Rate from Unsafe Sanitation %");
 
             // updateToolTip Function
-            var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
+            var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup, acsData);
 
             // xAxis Labels Event Listener
             xLabelsGroupsGroup.selectAll("text")
@@ -263,7 +279,7 @@ function makeResponsive() {
                         // Updates Text with New Values
                         textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis)
                         // Updates Tooltips with New Information
-                        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
+                        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup, acsData);
                         // Changes Classes to Change Bold Text
                         if (chosenXAxis === "safe_water_2017") {
                             safe_water_2017Label
@@ -296,7 +312,7 @@ function makeResponsive() {
                         // Updates Text with New Values
                         textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis)
                         // Updates Tooltips with New Information
-                        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
+                        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup, acsData);
                         // Changes Classes to Change Bold Text
                         if (chosenYAxis === "unsafe_water_perct") {
                             unsafe_water_perctLabel

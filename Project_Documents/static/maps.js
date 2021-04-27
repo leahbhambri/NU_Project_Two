@@ -71,7 +71,7 @@ function init() {
 
     // Binding a popup to each layer - needs to be variable based on dropdown selection
     onEachFeature: function(feature, layer) {
-      layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
+      layer.bindPopup("Country: " + feature.properties.ADMIN + "<br>Cause of Death %:<br>" +
       Math.round(feature.properties.unsafe_water_perct*100)/100 + "%");
     }
   })
@@ -99,7 +99,7 @@ function init() {
   
       // Binding a popup to each layer - needs to be variable based on dropdown selection
       onEachFeature: function(feature, layer) {
-        layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
+        layer.bindPopup("Country: " + feature.properties.ADMIN + "<br>Cause of Death %:<br>" +
          Math.round(feature.properties.unsafe_sanitation_perct*100)/100) + "%";
       }
     })
@@ -127,7 +127,7 @@ function init() {
   
       // Binding a popup to each layer - needs to be variable based on dropdown selection
       onEachFeature: function(feature, layer) {
-        layer.bindPopup("Country: " + feature.properties.country_name + "<br>Cause of Death %:<br>" +
+        layer.bindPopup("Country: " + feature.properties.ADMIN + "<br>Cause of Death %:<br>" +
         Math.round(feature.properties.no_handwashing_perct*100)/100 + "%");
       }
     })
@@ -198,7 +198,7 @@ function init() {
 
         // Binding a popup to each layer
         onEachFeature: function (feature, layer) {
-          layer.bindPopup("Country: " + feature.properties.country_name + "<br>Access to Clean Water:<br>" +
+          layer.bindPopup("Country: " + feature.properties.ADMIN + "<br>Access to Clean Water:<br>" +
             Math.round(feature.properties.safe_water_2017*100)/100 + "%");
         }
       }).addTo(myMap2);

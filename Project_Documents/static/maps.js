@@ -19,7 +19,7 @@ var causeDeath = ["UnsafeWater", "Sanitation", "Handwash"];
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   })
 
-var promises = [d3.json('Resources/countries.geojson'), d3.csv('Resources/merge_df.csv')]
+var promises = [d3.json('http://127.0.0.1:5000/api/v1.0/country_coords'), d3.json('http://127.0.0.1:5000/api/v1.0/water_data')]
 var test = true;
 var activeLayer = null;
 

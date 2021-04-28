@@ -116,48 +116,21 @@ function makeResponsive() {
         circlesGroup.on("mouseover", function (d, i) {
             toolTip.style("display", "block");
             toolTip.html(`Pizzas eaten: <strong>${d}</strong>`)
-                .style("left", d3.event.pageX + "px")
-                .style("top", d3.event.pageY + "px");
-            
+                .style("left", (d3.event.pageX+10) + "px")
+                .style("top", (d3.event.pageY+10) + "px")
+
         })
-        .on("mouseout", function() {
-            toolTip.style("display", "none");
-          });
-
-
-
-        // var toolTip = d3.tip()
-        //     .attr("class", "tooltip d3-tip")
-        //     .offset([90, 90])
-        //     .html(function (d) {
-        //         return (`<strong>${d.code}</strong><br>${xLabelsGroup} ${d[chosenXAxis]}<br>${yLabelsGroup} ${d[chosenYAxis]}`);
-        //     });
-
-        // Create Circles Tooltip in the Chart
-        // circlesGroup.call(toolTip);
-        // Create Event Listeners to Display and Hide the Circles Tooltip
-        // circlesGroup.on("mouseover", function (d) {
-        //     toolTip.show(d, this);
-        // })
-        //     // onmouseout Event
-        //     .on("mouseout", function (d) {
-        //         toolTip.hide(d);
-        //     });
-        // // Create Text Tooltip in the Chart
-        // textGroup.call(toolTip);
-        // Create Event Listeners to Display and Hide the Text Tooltip
-        // textGroup.on("mouseover", function (d) {
-        //     toolTip.show(d, this);
-        // })
-        //     // onmouseout Event
-        //     .on("mouseout", function (d) {
-        //         toolTip.hide(d);
-        //     });
+            .on("mouseout", function () {
+                toolTip.style("display", "none");
+            });
         return circlesGroup;
+        
+        
     }
 
     // Import Data from the d.csv File & Execute Everything Below
-    d3.json('http://127.0.0.1:5000/api/v1.0/water_data')
+    // d3.json('http://127.0.0.1:5000/api/v1.0/water_data')
+    d3.csv("Resources/merge_df.csv")
         .then(function (acsData) {
             console.log(acsData)
             // Format/Parse the Data (Cast as Numbers)
@@ -206,7 +179,7 @@ function makeResponsive() {
                 .enter()
                 .append("text")
                 .attr("x", d => xLinearScale(d[chosenXAxis]))
-                .attr("y", d => yLinearScale(d[chosenYAxis]) + 10 / 2.5)
+                .attr("y", d => yLinearScale(d[chosenYAxis])+10/2.5)
                 .text(d => (d.code))
                 .attr("class", "stateText")
                 .attr("font-size", "8px")
@@ -285,12 +258,12 @@ function makeResponsive() {
                             safe_water_2017Label
                                 .classed("active", true)
                                 .classed("inactive", false);
-                            safe_water_2017Label
-                                .classed("active", false)
-                                .classed("inactive", true);
-                            safe_water_2017Label
-                                .classed("active", false)
-                                .classed("inactive", true);
+                            // safe_water_2017Label
+                            //     .classed("active", false)
+                            //     .classed("inactive", true);
+                            // safe_water_2017Label
+                            //     .classed("active", false)
+                            //     .classed("inactive", true);
                         }
                     }
                 });

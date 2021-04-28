@@ -2,6 +2,7 @@
 var selection = d3.select("#selDataset")
 var myMap = null;
 var layerLookup = {};
+var legendLookup= {};
 
 var causeDeath = ["UnsafeWater", "Sanitation", "Handwash"];
 
@@ -20,8 +21,10 @@ var causeDeath = ["UnsafeWater", "Sanitation", "Handwash"];
   })
 
 var promises = [d3.json('http://127.0.0.1:5000/api/v1.0/country_coords'), d3.json('http://127.0.0.1:5000/api/v1.0/water_data')]
+// var promises = [d3.json("Resources/countries_selection_for_import.json"), d3.csv("Resources/merge_df")]
 var test = true;
 var activeLayer = null;
+var activeLegend = null;
 
 // Initialize the dashboard to start at Unsafe Water Source
 
@@ -31,6 +34,12 @@ function optionChanged(deathCause) {
     }
     activeLayer = layerLookup[deathCause];
     myMap.addLayer(activeLayer);
+    
+    if(activeLegend) {
+      myMap.removeLayer(activeLegend);
+    }
+    activeLegend = legendLookup[deathCause];
+    myMap.addLayer(activeLegend);
 }
 
 function init() {
@@ -137,6 +146,11 @@ function init() {
       "Sanitation": Sanitation,
       "UnsafeWater": UnsafeWater,
       "Handwash": Handwash
+    };
+    legendLookup = {
+      "Sanitation": SanitationLegend,
+      "UnsafeWater": UnsafeWaterLegend,
+      "Handwash": HandwashLegend
     };
 
     // Only one base layer can be shown at a time.
@@ -255,6 +269,62 @@ function init() {
 
 
 }
+
+    // Set up the legend.
+    var SanitationLegend = L.control({
+      position: "bottomright"
+  });
+
+  SanitationLegend.onAdd = function (map) {
+      var div = L.DomUtil.create("div", "info legend");
+
+      var gradesS = geojson.options.limits;
+      var colorsS = geojson.options.colors;
+
+      // Looping through our intervals to generate a label with a colored square for each interval.
+      for (var i = 0; i < gradesS.length; i++) {
+          div.innerHTML += "<i style='background: " + colorsS[i] + "'></i> "
+              + gradesS[i] + (gradesS[i + 1] ? "&ndash;" + gradesS[i + 1] + "<br>" : "+");
+      }
+      return div;
+    };
+    // Set up the legend.
+    var UnsafeWaterLegend = L.control({
+      position: "bottomright"
+  });
+
+  UnsafeWaterLegend.onAdd = function (map) {
+      var div = L.DomUtil.create("div", "info legend");
+
+      var gradesU = geojson.options.limits;
+      var colorsU = geojson.options.colors;
+
+      // Looping through our intervals to generate a label with a colored square for each interval.
+      for (var i = 0; i < gradesU.length; i++) {
+          div.innerHTML += "<i style='background: " + colorsU[i] + "'></i> "
+              + gradesU[i] + (gradesU[i + 1] ? "&ndash;" + gradesU[i + 1] + "<br>" : "+");
+      }
+      return div;
+    };
+
+    // Set up the legend.
+    var HandwashLegend = L.control({
+      position: "bottomright"
+  });
+
+  HandwashLegend.onAdd = function (map) {
+      var div = L.DomUtil.create("div", "info legend");
+
+      var gradesH = Handwash.options.limits;
+      var colorsH = Handwash.options.colors;
+
+      // Looping through our intervals to generate a label with a colored square for each interval.
+      for (var i = 0; i < gradesH.length; i++) {
+          div.innerHTML += "<i style='background: " + colorsH[i] + "'></i> "
+              + gradesH[i] + (gradesH[i + 1] ? "&ndash;" + gradesH[i + 1] + "<br>" : "+");
+      }
+      return div;
+    };
 
 init();
 

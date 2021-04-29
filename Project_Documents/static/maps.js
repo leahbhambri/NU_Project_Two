@@ -23,13 +23,16 @@ var causeDeath = ["UnsafeWater", "Sanitation", "Handwash"];
 var promises = [d3.json('http://127.0.0.1:5000/api/v1.0/country_coords'), d3.json('http://127.0.0.1:5000/api/v1.0/water_data')]
 // var promises = [d3.json("Resources/countries_selection_for_import.json"), d3.csv("Resources/merge_df.csv")]
 var test = true;
-var activeLayer = layerLookup["UnsafeWater"];
-var activeLegend = legendLookup["UnsafeWater"];
+var activeLayer = null;
+var activeLegend = null;
 
 // Initialize the dashboard to start at Unsafe Water Source
 
 function optionChanged(deathCause) {
-    if(activeLayer) {
+  if (legend) {
+    myMap.removeControl(legend) 
+  } 
+  if(activeLayer) {
       myMap.removeLayer(activeLayer);
     }
     activeLayer = layerLookup[deathCause];
@@ -171,8 +174,9 @@ function init() {
       center: [32.7502, 45.7655],
       zoom: 2,
       layers: [topo, UnsafeWater]
+
     });
-  
+    
 
     // Pass our map layers into our layer control.
     // Add the layer control to the map.
@@ -238,37 +242,32 @@ function init() {
 
       // Adding the legend to the map
       legend2.addTo(myMap2);
-      // legend.addTo(myMap);
+      legend.addTo(myMap);
 
 
 
     })
 
 
-  //   // worked on legend with tutor
-  //   var legend = L.control({
-  //     position: "bottomright"
-  // });
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "info legend");
 
-  // legend.onAdd = function (map) {
-  //     var div = L.DomUtil.create("div", "info legend");
+        var grades = UnsafeWater.options.limits;
+        var colors = UnsafeWater.options.colors;
 
-  //     var grades = UnsafeWater.options.limits;
-  //     var colors = UnsafeWater.options.colors;
+        // Looping through our intervals to generate a label with a colored square for each interval.
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML += "<i style='background: " + colors[i] + "'></i> "
+                + Math.round(grades[i]*1000)/1000 + (grades[i + 1] ? "&ndash;" + Math.round(grades[i + 1]*1000)/1000 + "<br>" : "+");
+        }
+        return div;
+    };
 
-  //     // Looping through our intervals to generate a label with a colored square for each interval.
-  //     for (var i = 0; i < grades.length; i++) {
-  //         div.innerHTML += "<i style='background: " + colors[i] + "'></i> "
-  //             + grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
-  //     }
-  //     return div;
-  // };
-
-  // // Finally, we our legend to the map.
-  // legend.addTo(myMap);
+    // Finally, we our legend to the map.
+    legend.addTo(myMap);
 
 
-}
+  }
 
     // Set up the legend.
     var SanitationLegend = L.control({
@@ -325,6 +324,10 @@ function init() {
       }
       return div;
     };
+// worked on legend with tutor
+var legend = L.control({
+  position: "bottomright"
+});
 
 init();
 

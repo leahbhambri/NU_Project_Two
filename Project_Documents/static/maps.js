@@ -21,10 +21,10 @@ var causeDeath = ["UnsafeWater", "Sanitation", "Handwash"];
   })
 
 var promises = [d3.json('http://127.0.0.1:5000/api/v1.0/country_coords'), d3.json('http://127.0.0.1:5000/api/v1.0/water_data')]
-// var promises = [d3.json("Resources/countries_selection_for_import.json"), d3.csv("Resources/merge_df")]
+// var promises = [d3.json("Resources/countries_selection_for_import.json"), d3.csv("Resources/merge_df.csv")]
 var test = true;
-var activeLayer = null;
-var activeLegend = null;
+var activeLayer = layerLookup["UnsafeWater"];
+var activeLegend = legendLookup["UnsafeWater"];
 
 // Initialize the dashboard to start at Unsafe Water Source
 
@@ -36,10 +36,10 @@ function optionChanged(deathCause) {
     myMap.addLayer(activeLayer);
     
     if(activeLegend) {
-      myMap.removeLayer(activeLegend);
+      myMap.removeControl(activeLegend);
     }
     activeLegend = legendLookup[deathCause];
-    myMap.addLayer(activeLegend);
+    activeLegend.addTo(myMap);
 }
 
 function init() {
@@ -231,41 +231,41 @@ function init() {
         // Looping through our intervals to generate a label with a colored square for each interval.
         for (var i = 0; i < grades2.length; i++) {
             div.innerHTML += "<i style='background: " + colors2[i] + "'></i> "
-                + grades2[i] + (grades2[i + 1] ? "&ndash;" + grades2[i + 1] + "<br>" : "+");
+                + Math.round(grades2[i]*100)/100 + (grades2[i + 1] ? "&ndash;" + Math.round(grades2[i + 1]*100)/100 + "<br>" : "+");
         }
         return div;
       };
 
       // Adding the legend to the map
       legend2.addTo(myMap2);
-      legend.addTo(myMap);
+      // legend.addTo(myMap);
 
 
 
     })
 
 
-    // worked on legend with tutor
-    var legend = L.control({
-      position: "bottomright"
-  });
+  //   // worked on legend with tutor
+  //   var legend = L.control({
+  //     position: "bottomright"
+  // });
 
-  legend.onAdd = function (map) {
-      var div = L.DomUtil.create("div", "info legend");
+  // legend.onAdd = function (map) {
+  //     var div = L.DomUtil.create("div", "info legend");
 
-      var grades = UnsafeWater.options.limits;
-      var colors = UnsafeWater.options.colors;
+  //     var grades = UnsafeWater.options.limits;
+  //     var colors = UnsafeWater.options.colors;
 
-      // Looping through our intervals to generate a label with a colored square for each interval.
-      for (var i = 0; i < grades.length; i++) {
-          div.innerHTML += "<i style='background: " + colors[i] + "'></i> "
-              + grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
-      }
-      return div;
-  };
+  //     // Looping through our intervals to generate a label with a colored square for each interval.
+  //     for (var i = 0; i < grades.length; i++) {
+  //         div.innerHTML += "<i style='background: " + colors[i] + "'></i> "
+  //             + grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+  //     }
+  //     return div;
+  // };
 
-  // Finally, we our legend to the map.
-  legend.addTo(myMap);
+  // // Finally, we our legend to the map.
+  // legend.addTo(myMap);
 
 
 }
@@ -278,13 +278,13 @@ function init() {
   SanitationLegend.onAdd = function (map) {
       var div = L.DomUtil.create("div", "info legend");
 
-      var gradesS = geojson.options.limits;
-      var colorsS = geojson.options.colors;
+      var gradesS = Sanitation.options.limits;
+      var colorsS = Sanitation.options.colors;
 
       // Looping through our intervals to generate a label with a colored square for each interval.
       for (var i = 0; i < gradesS.length; i++) {
           div.innerHTML += "<i style='background: " + colorsS[i] + "'></i> "
-              + gradesS[i] + (gradesS[i + 1] ? "&ndash;" + gradesS[i + 1] + "<br>" : "+");
+              + Math.round(gradesS[i]*1000)/1000 + (gradesS[i + 1] ? "&ndash;" + Math.round(gradesS[i + 1]*1000)/1000 + "<br>" : "+");
       }
       return div;
     };
@@ -296,13 +296,13 @@ function init() {
   UnsafeWaterLegend.onAdd = function (map) {
       var div = L.DomUtil.create("div", "info legend");
 
-      var gradesU = geojson.options.limits;
-      var colorsU = geojson.options.colors;
+      var gradesU = UnsafeWater.options.limits;
+      var colorsU = UnsafeWater.options.colors;
 
       // Looping through our intervals to generate a label with a colored square for each interval.
       for (var i = 0; i < gradesU.length; i++) {
           div.innerHTML += "<i style='background: " + colorsU[i] + "'></i> "
-              + gradesU[i] + (gradesU[i + 1] ? "&ndash;" + gradesU[i + 1] + "<br>" : "+");
+              + Math.round(gradesU[i]*1000)/1000 + (gradesU[i + 1] ? "&ndash;" + Math.round(gradesU[i + 1]*1000)/1000 + "<br>" : "+");
       }
       return div;
     };
@@ -321,7 +321,7 @@ function init() {
       // Looping through our intervals to generate a label with a colored square for each interval.
       for (var i = 0; i < gradesH.length; i++) {
           div.innerHTML += "<i style='background: " + colorsH[i] + "'></i> "
-              + gradesH[i] + (gradesH[i + 1] ? "&ndash;" + gradesH[i + 1] + "<br>" : "+");
+              + Math.round(gradesH[i]*1000)/1000 + (gradesH[i + 1] ? "&ndash;" + Math.round(gradesH[i + 1]*1000)/1000 + "<br>" : "+");
       }
       return div;
     };

@@ -106,22 +106,23 @@ function makeResponsive() {
     function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup, acsData) {
 
         if (chosenXAxis === "safe_water_2017") {
-            var xLabelsGroup = "% of Population with Access to Clean Water";
+            var xLabelsGroup = "Percent of Population with Access to Clean Water";
 
         }
 
         // Initialize Tool Tip
-        var toolTip = d3.select("#tooltip")
+        var mytooltip = d3.select("#tooltip")
             .attr("class", "tooltip")
         circlesGroup.on("mouseover", function (d, i) {
-            toolTip.style("display", "block");
-            toolTip.html(`Pizzas eaten: <strong>${d}</strong>`)
+            console.log(d);
+            mytooltip.style("display", "block");
+            mytooltip.html(`Country: <strong>${d}</strong>`)
                 .style("left", (d3.event.pageX+10) + "px")
                 .style("top", (d3.event.pageY+10) + "px")
 
         })
             .on("mouseout", function () {
-                toolTip.style("display", "none");
+                mytooltip.style("display", "none");
             });
         return circlesGroup;
         
@@ -195,7 +196,7 @@ function makeResponsive() {
                 .attr("y", 20)
                 .attr("value", "safe_water_2017") // Value to Grab for Event Listener
                 .classed("active", true)
-                .text("Safe Water %");
+                .text("Percent of Population with Access to Clean Water");
 
 
             // Create Group for 3 yAxis Labels
@@ -210,7 +211,7 @@ function makeResponsive() {
                 .attr("dy", "1em")
                 .classed("axis-text", true)
                 .classed("active", true)
-                .text("Death Rate from Unsafe Water %");
+                .text("Percent of Deaths Attributed to Unsafe Drinking Water");
 
             var no_handwashing_perctLabel = yLabelsGroup.append("text")
                 .attr("transform", "rotate(-90)")
@@ -220,7 +221,7 @@ function makeResponsive() {
                 .attr("dy", "1em")
                 .classed("axis-text", true)
                 .classed("inactive", true)
-                .text("Death Rate from No Handwashing %");
+                .text("Percent of Deaths Attributed to No Handwashing Access");
 
             var unsafe_sanitation_perctLabel = yLabelsGroup.append("text")
                 .attr("transform", "rotate(-90)")
@@ -230,7 +231,7 @@ function makeResponsive() {
                 .attr("dy", "1em")
                 .classed("axis-text", true)
                 .classed("inactive", true)
-                .text("Death Rate from Unsafe Sanitation %");
+                .text("Percent of Deaths Attributed to Unsafe Sanitation");
 
             // updateToolTip Function
             var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup, acsData);

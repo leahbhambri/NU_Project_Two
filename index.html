@@ -15,11 +15,11 @@
         var app; 
 
         function initPixi() {
-            app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight});
+            app = new PIXI.Application({width: window.innerWidth/3, height: window.innerHeight});
             document.body.appendChild(app.view);
             var image = new PIXI.Sprite.from("CleanvsDirtyWater.jpg");
-            image.width = window.innerWidth;
-            image.height = window.innerHeight;
+            image.width = window.innerWidth/3;
+            image.height = window.innerHeight/3;
             app.stage.addChild(image);
 
             displacementSprite = new PIXI.Sprite.from("Clouds.jpg");

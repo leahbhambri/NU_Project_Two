@@ -130,8 +130,8 @@ function makeResponsive() {
     }
 
     // Import Data from the d.csv File & Execute Everything Below
-    // d3.json('http://127.0.0.1:5000/api/v1.0/water_data')
-    d3.csv("Resources/merge_df.csv")
+    d3.json('http://127.0.0.1:5000/api/v1.0/water_data')
+    // d3.csv("Resources/merge_df.csv")
         .then(function (acsData) {
             console.log(acsData)
             // Format/Parse the Data (Cast as Numbers)

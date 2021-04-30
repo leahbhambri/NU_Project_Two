@@ -105,6 +105,7 @@ select {
   background-attachment: fixed;
   background-position: bottom center;
   background-size: cover;
+  overflow: hidden;  
 }
 
 .hero h1 {
